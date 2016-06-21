@@ -10,6 +10,12 @@ describe('Feature Test', function() {
     plane = new Plane();
   });
 
+describe('when weather is not stormy', function() {
+
+  beforeEach(function() {
+    spyOn(airport, 'isStormy').and.returnValue(false);
+  });
+
   it('allows landing of a plane', function() {
     plane.land(airport);
     expect(airport.planes()).toContain(plane);
@@ -20,6 +26,18 @@ describe('Feature Test', function() {
     plane.takeOff();
     expect(airport.planes()).not.toContain(plane);
   });
+});
 
+describe('when weather is stormy', function() {
 
+  beforeEach(function() {
+    spyOn(airport, 'isStormy').and.returnValue(true);
+  })
+
+  it('does not allow take off when stormy', function() {
+    plane.land(airport);
+    expect(function(){ airport.clearForTakeOff(plane); }).toThrowError('cannot take off during storm');
+    expect(airport.planes()).toContain(plane);
+    });
+  });
 });
